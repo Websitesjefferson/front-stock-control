@@ -37,6 +37,7 @@
 </style>
 
 <script>
+  import {URL} from  '../components/Api'
 export default {
   data() {
     return {
@@ -46,7 +47,8 @@ export default {
       showSnackbar: false,
       snackbarMessage: '',
       snackbarColor: '',
-      snackbarTimeout: 3000
+      snackbarTimeout: 3000,
+      apiUrl: URL
     };
   },
   methods: {
@@ -65,7 +67,7 @@ export default {
         };
 
         // Fazendo a solicitação POST para a API
-        axios.post('https://localhost:7148/api/Produtos', formData)
+        axios.post(this.apiUrl, formData)
           .then(response => {
             // Manipular a resposta da API, se necessário
             console.log('Resposta da API:', response.data);

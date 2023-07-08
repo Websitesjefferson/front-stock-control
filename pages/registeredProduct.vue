@@ -5,6 +5,17 @@
     <v-row justify="center" align="center" class="mt-5">
     <v-text-field class="col-sm-6 custom-text-field" :class="{'custom-background': true, 'custom-text-color': true}" v-model="searchTerm" label="Buscar produto"></v-text-field>
     </v-row>
+     <template v-if="filteredItems.length === 0">
+      <div justify="center" align="center">
+        <v-row justify="center" align="center" class="mb-5 mt-5 black--text">
+          Nenhum Produto cadastrado
+        </v-row>
+        <div>
+          <router-link to="/" class="black--text font-weight-bold">Cadastrar produto</router-link>
+        </div>
+      </div>
+    
+    </template>
     <v-row justify="center" align="center">
       <v-col v-for="item in filteredItems" :key="item.id" cols="12" sm="6" md="7">
         <v-card class="item-card">
@@ -87,6 +98,7 @@
 </style>
 
 <script>
+import {URL} from  '../components/Api'
 export default {
   name: 'InspirePage',
   data() {
@@ -99,6 +111,7 @@ export default {
       modalEditVisible: false,
       itemEdit: {},
       searchTerm: '',
+      apiUrl: URL
     };
   },
   mounted() {
@@ -126,7 +139,7 @@ export default {
     fetchItems() {
       import('axios')
         .then(({ default: axios }) => {
-          axios.get('https://localhost:7148/api/Produtos')
+          axios.get(this.apiUrl)
             .then(response => {
               this.items = response.data;
               console.log(response.data);
@@ -147,7 +160,7 @@ export default {
       // Lógica para salvar as alterações do item editado
       import('axios')
         .then(({ default: axios }) => {
-          axios.put(`https://localhost:7148/api/Produtos/${this.itemEdit.id}`, this.itemEdit)
+          axios.put(`${this.apiUrl}/${this.itemEdit.id}`, this.itemEdit)
             .then(response => {
               console.log(`Item com ID ${this.itemEdit.id} editado com sucesso`);
               this.fetchItems();
@@ -172,7 +185,7 @@ export default {
     deleteItem(item) {
       import('axios')
         .then(({ default: axios }) => {
-          axios.delete(`https://localhost:7148/api/Produtos/${item.id}`)
+          axios.delete(`${this.apiUrl}/${item.id}`)
             .then(response => {
               console.log(`Item com ID ${item.id} excluído com sucesso`);
               this.fetchItems();
